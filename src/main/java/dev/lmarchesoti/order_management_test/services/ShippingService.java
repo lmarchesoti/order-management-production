@@ -7,6 +7,6 @@ import org.springframework.stereotype.Service;
 public class ShippingService {
 
     public Double calculateShipping(ShippingInfo shippingInfo) {
-        return 0.0; // fixed value stub
+        return 10.0; // fixed value stub
     }
 }

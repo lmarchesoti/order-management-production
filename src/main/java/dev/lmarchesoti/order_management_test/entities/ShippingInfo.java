@@ -33,6 +33,16 @@ public class ShippingInfo {
 
     private Long destinationNumber;
 
+    public void setOrigin(String zipCode, Long number) {
+        originZipCode = zipCode;
+        originNumber = number;
+    }
+
+    public void setDestination(String zipCode, Long number) {
+        destinationZipCode = zipCode;
+        destinationNumber = number;
+    }
+
     public boolean hasDestination() {
         return destinationZipCode != null && destinationNumber != null;
     }

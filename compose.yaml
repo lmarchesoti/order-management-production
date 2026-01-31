@@ -1,0 +1,96 @@
+services:
+
+  postgres:
+    container_name: order-management-postgres
+    image: 'postgres:18'
+    ports:
+      - '5432:5432'
+    environment:
+      - 'POSTGRES_DB=ordermanagement'
+      - 'POSTGRES_PASSWORD=ordermanagement'
+      - 'POSTGRES_USER=ordermanagement_user'
+    networks:
+      - order-management-network
+
+  pgadmin:
+    image: dpage/pgadmin4:9.8
+    ports:
+      - 5050:80
+    environment:
+      # Required by pgAdmin
+      PGADMIN_DEFAULT_EMAIL: demo@example.com
+      PGADMIN_DEFAULT_PASSWORD: secret
+
+      # Don't require the user to login
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+
+      # Don't require a "master" password after logging in
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+    networks:
+      - order-management-network
+    depends_on:
+      - postgres
+
+  kafka:
+    image: apache/kafka-native
+    container_name: order-management-kafka
+    ports:
+      - "9092:9092"
+    environment:
+      # Configure listeners for both docker and host communication
+      KAFKA_LISTENERS: CONTROLLER://localhost:9091,HOST://0.0.0.0:9092,DOCKER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: HOST://localhost:9092,DOCKER://kafka:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,DOCKER:PLAINTEXT,HOST:PLAINTEXT
+
+      # Settings required for KRaft mode
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9091
+
+      # Listener to use for broker-to-broker communication
+      KAFKA_INTER_BROKER_LISTENER_NAME: DOCKER
+
+      # Required for a single node cluster
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+      # Pre-create topics: name:partitions:replication-factor
+      KAFKA_CREATE_TOPICS: "product.a.orders:3:1"
+    networks:
+      - order-management-network
+
+  init-kafka:
+    image: apache/kafka
+    depends_on:
+      - kafka
+    entrypoint: [ '/bin/sh', '-c' ]
+    command: |
+      "
+      # blocks until kafka is reachable
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server order-management-kafka:9093 --list
+
+      echo -e 'Creating kafka topics'
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server order-management-kafka:9093 --create --if-not-exists --topic product.a.orders --replication-factor 1 --partitions 3
+
+      echo -e 'Successfully created the following topics:'
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server order-management-kafka:9093 --list
+      "
+    networks:
+      - order-management-network
+
+  kafka-ui:
+    image: kafbat/kafka-ui:main
+    ports:
+      - "8090:8080"
+    environment:
+      DYNAMIC_CONFIG_ENABLED: "true"
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9093
+    networks:
+      - order-management-network
+    depends_on:
+      - kafka
+
+networks:
+  order-management-network:
+    driver: bridge

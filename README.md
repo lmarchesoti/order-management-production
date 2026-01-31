@@ -34,9 +34,8 @@ Dessa forma eles atuam com redundância e podem ser colocados atrás de um load 
 
 ## Duplicação de Pedidos
 
-Como o documento menciona tanto a duplicação de pedidos quanto a presença da informação de status, assumi que o pedido pode vir mais de uma vez com modificações.  
-Também foi informado que o pedido sempre virá completo.  
-Dessa forma, quando um pedido já existente é recebido, ele será atualizado no banco conforme os últimos dados recebidos. 
+Para o projeto não ficar muito complexo, estou apenas ignorando os pedidos que já foram recebidos.
+Futuramente poderia ser implementada uma lógica de upsert.
 
 ## Observações
 

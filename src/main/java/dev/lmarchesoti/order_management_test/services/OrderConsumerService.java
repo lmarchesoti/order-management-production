@@ -11,7 +11,7 @@ public class OrderConsumerService {
 
     private final OrderService orderService;
 
-    @KafkaListener(topics = "product.a.orders")
+    @KafkaListener(topics = "${app.kafka.topic}")
     public void listenOrders(ProductAOrder message) {
         orderService.processOrder(message);
     }
