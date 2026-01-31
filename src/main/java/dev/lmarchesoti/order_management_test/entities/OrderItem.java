@@ -25,6 +25,8 @@ public class OrderItem {
 
     private Long itemId;
 
+    private String description;
+
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
