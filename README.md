@@ -30,12 +30,14 @@ Por isso decidi disponibilizar no formato REST.
 
 O serviço de consumo de mensagens pode ser garantido por redundância dos microsserviços.  
 O serviço de consultas está presente em todas as instâncias dos microsserviços também. 
-Dessa forma eles atuam com redundância e podem ser colocados atrás de um load balancer para ser transparente ao cliente (produto externo b).
+Dessa forma eles atuam com redundância e podem ser colocados atrás de um load balancer para ser transparente ao cliente (produto externo b).  
+Caso seja desejável, utilizando parâmetros do spring boot podemos desabilitar tanto a interface web como o consumidor do kafka. 
+Assim é possível criar qualquer arranjo onde algumas instâncias agem como client web, outras como consumidores, e até algumas como ambos. 
+Fica flexível e configurável para atender as necessidades do ambiente de produção. 
 
 ## Duplicação de Pedidos
 
-Para o projeto não ficar muito complexo, estou apenas ignorando os pedidos que já foram recebidos.
-Futuramente poderia ser implementada uma lógica de upsert.
+Para simplicidade, estou atualizando apenas os status dos pedidos já existentes.
 
 ## Observações
 

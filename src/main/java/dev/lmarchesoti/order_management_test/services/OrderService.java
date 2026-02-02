@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,13 +35,26 @@ public class OrderService {
     @Transactional
     public void processOrder(ProductAOrder productAOrder) {
 
-        if (orderRepository.existsByOrderId(productAOrder.orderId())) {
-            logger.info("Order with id " + productAOrder.orderId() + " already exists. Ignoring.");
-            return;
+        Optional<Order> existingOrder = orderRepository.findByOrderId(productAOrder.orderId());
+
+        if (existingOrder.isPresent()) {
+            logger.info("Updating order with orderId" + productAOrder.orderId());
+            updateOrder(existingOrder.get(), productAOrder);
+        } else {
+            logger.info("Creating new order with orderId: " + productAOrder.orderId());
+            Order order = createOrder(productAOrder);
+            logger.info("Finished creating product with id: " + order.getId());
         }
 
-        logger.info("Creating new order with orderId: " + productAOrder.orderId());
 
+    }
+
+    protected void updateOrder(Order order, ProductAOrder productAOrder) {
+        order.setStatus(productAOrder.status());
+        orderRepository.save(order);
+    }
+
+    protected Order createOrder(ProductAOrder productAOrder) {
         Order order = new Order();
         order.setOrderId(productAOrder.orderId());
         order.setCustomerId(productAOrder.customerId());
@@ -89,9 +103,7 @@ public class OrderService {
         }
 
         orderRepository.save(order);
-
-        logger.info("Finished creating product with id: " + order.getId());
-
+        return order;
     }
 
     public Page<Order> getOrders(Long customerId, LocalDateTime startCreatedAt, LocalDateTime endCreatedAt, Pageable pageable) {
