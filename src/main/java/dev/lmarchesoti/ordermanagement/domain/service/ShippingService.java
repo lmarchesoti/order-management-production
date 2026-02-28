@@ -1,6 +1,5 @@
 package dev.lmarchesoti.ordermanagement.domain.service;
 
-import dev.lmarchesoti.ordermanagement.adapter.outbound.persistence.entity.ShippingInfoJpaEntity;
 import dev.lmarchesoti.ordermanagement.domain.model.ShippingInfo;
 import org.springframework.stereotype.Service;
 
