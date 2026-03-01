@@ -1,7 +1,5 @@
 package dev.lmarchesoti.ordermanagement.application.service;
 
-import dev.lmarchesoti.ordermanagement.adapter.outbound.persistence.jparepository.OrderJpaRepository;
-import dev.lmarchesoti.ordermanagement.adapter.producta.dto.ProductAOrder;
 import dev.lmarchesoti.ordermanagement.application.command.InternalizeOrderCommand;
 import dev.lmarchesoti.ordermanagement.application.port.out.OrderPersistencePort;
 import dev.lmarchesoti.ordermanagement.domain.model.Order;
@@ -15,9 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;

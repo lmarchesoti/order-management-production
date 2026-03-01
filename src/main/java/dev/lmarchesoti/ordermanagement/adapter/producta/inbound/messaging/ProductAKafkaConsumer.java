@@ -11,13 +11,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class OrderConsumerService {
+public class ProductAKafkaConsumer {
 
     private final ProcessOrderUseCase processOrderUseCase;
 
     private final ProductAOrderMapper productAOrderMapper;
 
-    @KafkaListener(topics = "${app.kafka.topic}")
+    @KafkaListener(topics = "${app.kafka.topic}", containerFactory = "productAKafkaListenerContainerFactory")
     public void listenOrders(ProductAOrder message) {
         Order order = productAOrderMapper.toDomain(message);
         processOrderUseCase.processOrder(new InternalizeOrderCommand(order));
