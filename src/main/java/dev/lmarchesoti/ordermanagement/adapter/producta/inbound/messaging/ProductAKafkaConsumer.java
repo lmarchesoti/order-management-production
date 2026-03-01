@@ -17,7 +17,7 @@ public class ProductAKafkaConsumer {
 
     private final ProductAOrderMapper productAOrderMapper;
 
-    @KafkaListener(topics = "${app.kafka.topic}", containerFactory = "productAKafkaListenerContainerFactory")
+    @KafkaListener(topics = "${producta.kafka.topic}", containerFactory = "productAKafkaListenerContainerFactory")
     public void listenOrders(ProductAOrder message) {
         Order order = productAOrderMapper.toDomain(message);
         processOrderUseCase.processOrder(new InternalizeOrderCommand(order));

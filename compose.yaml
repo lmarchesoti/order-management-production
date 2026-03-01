@@ -71,6 +71,7 @@ services:
 
       echo -e 'Creating kafka topics'
       /opt/kafka/bin/kafka-topics.sh --bootstrap-server order-management-kafka:9093 --create --if-not-exists --topic product.a.orders --replication-factor 1 --partitions 3
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server order-management-kafka:9093 --create --if-not-exists --topic product.a.orders.dlt --replication-factor 1 --partitions 3
 
       echo -e 'Successfully created the following topics:'
       /opt/kafka/bin/kafka-topics.sh --bootstrap-server order-management-kafka:9093 --list
