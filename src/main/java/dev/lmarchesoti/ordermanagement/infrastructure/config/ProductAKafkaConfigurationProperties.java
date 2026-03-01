@@ -1,4 +1,4 @@
-package dev.lmarchesoti.ordermanagement.adapter.producta.inbound.messaging;
+package dev.lmarchesoti.ordermanagement.infrastructure.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

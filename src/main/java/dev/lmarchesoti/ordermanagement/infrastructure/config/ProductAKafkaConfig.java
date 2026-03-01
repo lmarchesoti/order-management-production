@@ -1,4 +1,4 @@
-package dev.lmarchesoti.ordermanagement.adapter.producta.inbound.messaging;
+package dev.lmarchesoti.ordermanagement.infrastructure.config;
 
 import dev.lmarchesoti.ordermanagement.adapter.producta.dto.ProductAOrder;
 import lombok.RequiredArgsConstructor;
